@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+  <head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <style>
+      *{
+        box-sizing:border-box;
+        -moz-box-sizing:border-box;
+        -o-box-sizing:border-box;
+        -webkit-box-sizing:border-box;
+        margin: 0;
+        padding:0;
+      }
+        #loader{
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 22;
+        }
+        #loader img{
+             left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            position: absolute;
+            margin: auto;
+        }
+      #fix {
+        background: #fff none repeat scroll 0 0;
+        color: #f60001;
+        font-size: 90px;
+        height: 100%;
+        margin: 0;
+        opacity: 0.89;
+        padding: 9% 0 0;
+        position: fixed;
+        text-align: center;
+        vertical-align: middle;
+        width: 100%;
+        word-spacing: 5px;
+        z-index: 8;
+      }
+      .popup{
+        background: #333 none repeat scroll 0 0;
+        border: 1px solid #000;
+        border-radius: 12px;
+        bottom: 0;
+        color: #fff;
+        height: 150px;
+        left: 0;
+        margin: auto;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        top: 0;
+        width: 304px;
+      }
+      #output {
+        font-size: 18px;
+        text-transform: uppercase;
+      }
+      #lastchar{
+        text-align:center;
+      }
+      .close{
+        background:#000;
+        width:100px;
+        margin: 15px auto 0;
+        text-transform: uppercase;
+        text-align: center;
+        padding:5px 0;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      #char {
+        display: inline-block;
+        padding: 10px 0;
+        text-align: center;
+        width: 100%;
+      }
+      div.form1 {
+        border: 1px solid #333;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+        width: 500px;
+      }
+      label {
+        display: block;
+        text-transform: uppercase;
+      }
+.form-style {
+  border: 1px solid #555;
+  border-radius: 10px;
+  height: 45px;
+  margin: 10px auto 0;
+  position: relative;
+  width: 250px;
+}
+.form-style input[type="button"] {
+  background: #333 none repeat scroll 0 0;
+  border: 0 none;
+  border-radius: 0 6px 6px 0;
+  -ms-border-radius: 0 6px 6px 0;
+  -moz-border-radius: 0 6px 6px 0;
+  -o-border-radius: 0 6px 6px 0;
+  color: #fff;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  text-transform: uppercase;
+  width: 46px;
+  font-size: 15px;
+  cursor:pointer;
+}
+#firstuser {
+  background: transparent none repeat scroll 0 0;
+  border: 0 none;
+  color: #333;
+  height: 100%;
+  left: 0;
+  outline: 0 none;
+  padding: 10px;
+  position: absolute;
+  width: 100%;
+  font-size: 15px;
+}
+#popup{display: none;}
+#error{color: red;}
+    </style>
+  </head>
+  <body>
+        <div id="fix" style="display:none">
+          Thank You!<br/>Game OVER<br/>
+          <input type="button" value="Restart" onClick="location.reload();">
+        </div>
+    <div id="counter"></div>
+    <div class="form1" >
+      <label>Enter Your Text Here</label>
+      <div class="form-style">
+        <input type="text" id="firstuser" onkeydown="jsonLoadOnEnter(event,this);" name="firstuser" placeholder="Input Word"/>
+		
+        <input type="button" id="btn" value="Go" onClick="callFunctionForStartGame(document.getElementById('firstuser'));" />
+        
+      </div>
+        <div id="error"></div>
+    </div>
+    <div id="popup" class="popup">
+      <span id="char"></span>
+      <div id="lastchar"></div>
+      <div id="id01"></div>
+      <div id='countdown'></div>   
+        <div id="close" class="close" onclick="this.parentNode.style.display = 'none'">close</div>
+    </div>
+      <div id="loader"><img src="loader.gif" alt="" /></div>
+      <script type="text/javascript">          
+         var interval;        
+        var dictionary={};          
+        function jsonLoadOnEnter(e,elm){
+          if(e.keyCode==13){
+             callFunctionForStartGame(elm);             
+          }
+        }   
+        var callFunctionForStartGame=function(elm){
+             var userInput=elm.value;
+              if(userInput!=''){
+                  document.getElementById('error').innerHTML='';
+                  var wordExist=IsWordExistInDictionary(userInput);
+                 // console.log(wordExist);
+                  if(wordExist){       
+                      document.getElementById('error').innerHTML='';
+                      findNextWord(userInput);   
+                  }
+                  else{
+                      document.getElementById('error').innerHTML='This Word not Exist in DB. Please try another word';
+                  }
+              }
+              else{
+                 document.getElementById('error').innerHTML='Please Enter a word.'; 
+              }
+        }  
+          
+        var findNextWord=function(userInput){
+            var lastChar=userInput.charAt(userInput.length-1);            
+            var charList=dictionary[lastChar.toLowerCase()];
+            if(charList.length>0){
+             myFunction(charList);
+            }
+        };  
+        function myFunction(response) {
+          var i = 1;
+          var i = Math.floor((Math.random() * response.length) + 1);
+          var out = "<span id='output'>";
+          out += "<tr><td>" +
+                  response[i].aa +
+                  "</span>";
+          document.getElementById("id01").innerHTML = out;
+		  word();
+          countdown('countdown'); 
+        } 
+        function word() {
+            document.getElementById("popup").style.display = "block";
+            a = document.getElementById("firstuser").value;
+            document.getElementById("char").innerHTML = a;
+            var charlenght = a.length;
+            var lastchar = a.charAt(charlenght - 1);
+            b = lastchar;
+            document.getElementById("lastchar").innerHTML = b;
+          }    
+        function countdown(element) {   
+            clearInterval(interval);
+             var minutes = 1;
+             var seconds = 0; 
+            interval = setInterval(function() {
+                var el = document.getElementById(element);
+                if(seconds == 0) {
+                    if(minutes == 0) {
+                          document.getElementById("fix").style.display = "block";
+                        clearInterval(interval);
+                        return;
+                    } else {
+                        minutes--;
+                        seconds = 30;
+                    }
+                }
+                if(minutes > 0) {
+                    var minute_text = minutes + (minutes > 1 ? ' minutes' : ' minute');
+                } else {
+                    var minute_text = '';
+                }
+                var second_text = seconds > 1 ? 'seconds' : 'second';
+                el.innerHTML = minute_text + ' ' + seconds + ' ' + second_text + ' remaining';
+                seconds--;
+            }, 1000);
+    }    
+        var IsWordExistInDictionary=function(userInput){            
+            var isValue=false;
+            var firstChar=userInput.charAt(0);
+            var charList=dictionary[firstChar.toLowerCase()];
+            if(charList.length>0){
+             charList.filter(function(item){
+                  if((item.aa).toLowerCase()==userInput.toLowerCase()){
+                      isValue=true;
+                  }
+             });
+            }  
+            return isValue;
+        };
+        function loadAllDataOnBrowser(){  
+            var alphabets=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+            for(var i=0; i<alphabets.length; i++){
+                var url_first = "json/"+alphabets[i] + ".json";
+                (function(i){                      
+                  var xmlhttp = new XMLHttpRequest();
+                  xmlhttp.onreadystatechange = function() {
+			      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { 
+                      document.getElementById('loader').style.display='block';
+                       var result=JSON.parse(xmlhttp.responseText);
+                       dictionary[alphabets[i]]=result;
+                       document.getElementById('loader').style.display='none';
+                  }
+                 }
+                xmlhttp.open("GET", url_first, true);
+                xmlhttp.send();
+         
+                })(i);
+                    
+            }
+            
+        };
+        loadAllDataOnBrowser();
+      </script>
+  </body>
+</html>
